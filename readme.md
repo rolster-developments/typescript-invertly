@@ -14,6 +14,10 @@ You must install the `@rolster/typescript-types` to define package data types, w
 
 ```json
 {
+  "compilerOptions": {
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true
+  },
   "files": ["node_modules/@rolster/typescript-types/index.d.ts"]
 }
 ```
