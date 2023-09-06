@@ -3,9 +3,9 @@
   "version": "4.0.0",
   "description": "Invertly is a package that allows you to implement class mapping to identify and inject their dependencies.",
   "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
   "main": "dist/cjs/lib.cjs.js",
   "unpkg": "dist/es/lib.js",
+  "types": "dist/esm/index.d.ts",
   "author": "Rolster Technology <rolster.developments@gmail.com>",
   "license": "MIT",
   "files": [
@@ -38,6 +38,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/rolster-developments/invertly.git"
+    "url": "https://github.com/rolster-developments/typescript-invertly.git"
   }
 }
