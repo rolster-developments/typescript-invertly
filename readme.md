@@ -5,7 +5,7 @@ Invertly is a package that allows you to implement class mapping to identify and
 ## Installation
 
 ```
-npm i @rolster/invertly
+npm i @rolster/typescript-invertly
 ```
 
 ## Configuration
