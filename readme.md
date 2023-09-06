@@ -1,4 +1,4 @@
-# Rolster Invertly
+# Rolster Typescript Invertly
 
 Invertly is a package that allows you to implement class mapping to identify and inject their dependencies.
 
