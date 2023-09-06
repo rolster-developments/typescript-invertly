@@ -26,9 +26,7 @@ class LocatorStore {
     }
   }
 
-  public fetch<T = unknown>(
-    token: InjectToken<T>
-  ): Undefined<LocatorConfig<T>> {
+  public fetch<T = unknown>(token: InjectToken<T>): Config<T> {
     return this.collection.get(token);
   }
 }
