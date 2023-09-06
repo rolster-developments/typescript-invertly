@@ -7,7 +7,11 @@ interface Inject {
   singleton: boolean;
 }
 
-function createInject({ scopeable, singleton, token }: Inject): ParameterDecorator {
+function createInject({
+  scopeable,
+  singleton,
+  token
+}: Inject): ParameterDecorator {
   return (parent, _, index) => {
     registerInject({
       config: { index, parent, scopeable, singleton, token }

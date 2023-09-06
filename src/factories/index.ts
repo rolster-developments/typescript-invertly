@@ -28,7 +28,10 @@ interface Inject {
 
 const rootContainer = new Container();
 
-function createFromInvertly<T = unknown>({ config, container }: Injection<T>): T {
+function createFromInvertly<T = unknown>({
+  config,
+  container
+}: Injection<T>): T {
   return (container || rootContainer).createInjectable(config);
 }
 

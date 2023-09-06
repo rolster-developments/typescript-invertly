@@ -7,7 +7,12 @@ export {
   registerInject,
   registerInjectable
 } from './factories';
-export { Context, fetchInLocator, pushInLocator, saveInLocator } from './stores';
+export {
+  Context,
+  fetchInLocator,
+  pushInLocator,
+  saveInLocator
+} from './stores';
 export { InjectableToken, InjectToken, LocatorConfig } from './types';
 
 export default createFromInvertly;

@@ -71,7 +71,9 @@ class Dependency {
     const config = this.container.injectables.fetch(injectable);
 
     if (!config) {
-      throw Error(`Class ${injectable.toString()} is not found in the collection`);
+      throw Error(
+        `Class ${injectable.toString()} is not found in the collection`
+      );
     }
 
     const { scopeable, singleton, token } = config;
