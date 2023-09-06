@@ -1,4 +1,5 @@
-import { InjectConfig, InjectableToken } from '../types';
+import { InjectConfig } from '../types/inject.type';
+import { InjectableToken } from '../types/injectable.type';
 
 export class InjectStore {
   private collection: Map<InjectableToken, InjectConfig[]> = new Map();

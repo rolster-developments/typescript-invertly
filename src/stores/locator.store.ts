@@ -1,4 +1,6 @@
-import { LocatorConfig, InjectToken, InjectableToken } from '../types';
+import { InjectToken } from '../types/inject.type';
+import { InjectableToken } from '../types/injectable.type';
+import { LocatorConfig } from '../types/locator.type';
 
 type Reference = string | symbol | LocatorConfig;
 

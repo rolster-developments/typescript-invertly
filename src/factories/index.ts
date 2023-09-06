@@ -1,4 +1,4 @@
-import { Builder } from './factory';
+import { Builder } from './builder.factory';
 import {
   InjectConfig,
   InjectableConfig,
@@ -44,14 +44,6 @@ export function registerInject({ config, builder }: Inject): void {
   (builder || superBuilder).registerInject(config);
 }
 
-export function printInjectables(): void {
-  superBuilder.printInjectables();
-}
-
-export function printInjects(): void {
-  superBuilder.printInjects();
-}
-
-export { Builder } from './factory';
+export { Builder } from './builder.factory';
 
 export default factoryInject;

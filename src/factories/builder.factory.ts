@@ -38,7 +38,7 @@ interface ReflectProps<T> {
   tokens: InjectableToken[];
 }
 
-class Injectable {
+class Handler {
   private container: Container;
 
   private scope: ScopeStore;
@@ -198,19 +198,11 @@ export class Builder {
     this.container.injects.push(config);
   }
 
-  public printInjectables(): void {
-    console.log(this.container.injectables);
-  }
-
-  public printInjects(): void {
-    console.log(this.container.injects);
-  }
-
   public createInjectable<T = unknown>(config: InjectionConfig<T>): T {
     const { token, context } = config;
     const { container } = this;
 
-    const injectable = new Injectable({ container, context });
+    const injectable = new Handler({ container, context });
 
     return injectable.build(token);
   }

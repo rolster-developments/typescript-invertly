@@ -1,4 +1,4 @@
-import { Context } from '../stores';
+import { Context } from '../stores/context.store';
 import { Constructable } from './constructable.type';
 
 export type InjectableToken<T = unknown> =

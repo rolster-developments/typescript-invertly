@@ -1,5 +1,5 @@
 import { registerInject } from '../factories';
-import { InjectToken } from '../types';
+import { InjectToken } from '../types/inject.type';
 
 interface Inject {
   token: InjectToken;
