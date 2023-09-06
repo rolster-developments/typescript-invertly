@@ -1,4 +1,4 @@
-import { Builder } from './builder.factory';
+import { Container } from './container.factory';
 import {
   InjectConfig,
   InjectableConfig,
@@ -8,42 +8,42 @@ import {
 
 interface Injection<T> {
   config: InjectionConfig<T>;
-  builder?: Builder;
+  container?: Container;
 }
 
 interface Token<T> {
   token: InjectableToken<T>;
-  builder?: Builder;
+  container?: Container;
 }
 
 interface Injectable {
   config: InjectableConfig;
-  builder?: Builder;
+  container?: Container;
 }
 
 interface Inject {
   config: InjectConfig;
-  builder?: Builder;
+  container?: Container;
 }
 
-const superBuilder = new Builder();
+const rootContainer = new Container();
 
-function factoryInject<T = unknown>({ config, builder }: Injection<T>): T {
-  return (builder || superBuilder).createInjectable(config);
+function createFromInvertly<T = unknown>({ config, container }: Injection<T>): T {
+  return (container || rootContainer).createInjectable(config);
 }
 
-export function inject<T = unknown>({ token, builder }: Token<T>): T {
-  return factoryInject({ config: { token }, builder });
+export function invertly<T = unknown>({ token, container }: Token<T>): T {
+  return createFromInvertly({ config: { token }, container });
 }
 
-export function registerInjectable({ config, builder }: Injectable): void {
-  (builder || superBuilder).registerInjectable(config);
+export function registerInjectable({ config, container }: Injectable): void {
+  (container || rootContainer).registerInjectable(config);
 }
 
-export function registerInject({ config, builder }: Inject): void {
-  (builder || superBuilder).registerInject(config);
+export function registerInject({ config, container }: Inject): void {
+  (container || rootContainer).registerInject(config);
 }
 
-export { Builder } from './builder.factory';
+export { Container } from './container.factory';
 
-export default factoryInject;
+export default createFromInvertly;

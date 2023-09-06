@@ -7,6 +7,7 @@ import {
   fetchInLocator
 } from '../stores';
 import {
+  AbstractContext,
   Constructable,
   InjectConfig,
   InjectableConfig,
@@ -17,8 +18,8 @@ import {
 type Tokens = Undefined<InjectableToken[]>;
 
 interface InjectableProps {
-  container: Container;
-  context?: Context;
+  container: Warehouse;
+  context?: AbstractContext;
 }
 
 interface InstanceProps<T> {
@@ -30,7 +31,7 @@ interface InstanceProps<T> {
 interface ScopeProps<T> {
   token: InjectableToken<T>;
   scope: ScopeStore;
-  context?: Context;
+  context?: AbstractContext;
 }
 
 interface ReflectProps<T> {
@@ -38,12 +39,26 @@ interface ReflectProps<T> {
   tokens: InjectableToken[];
 }
 
-class Handler {
-  private container: Container;
+class Warehouse {
+  public readonly scope: ScopeStore;
+
+  public readonly injectables: InjectableStore;
+
+  public readonly injects: InjectStore;
+
+  constructor() {
+    this.scope = new ScopeStore();
+    this.injectables = new InjectableStore();
+    this.injects = new InjectStore();
+  }
+}
+
+class Dependency {
+  private container: Warehouse;
 
   private scope: ScopeStore;
 
-  private context?: Context;
+  private context?: AbstractContext;
 
   constructor({ container, context }: InjectableProps) {
     this.container = container;
@@ -104,13 +119,14 @@ class Handler {
 
   private createInstance<T = unknown>(props: InstanceProps<T>): T {
     const { token, scopeable, singleton } = props;
+    const { scope } = this;
 
     if (singleton) {
       return this.createFromContainer(token);
     }
 
     if (scopeable) {
-      return this.createFromScope({ token, scope: this.scope });
+      return this.createFromScope({ token, scope });
     }
 
     return this.createObject(token);
@@ -169,25 +185,11 @@ class Handler {
   }
 }
 
-class Container {
-  public readonly scope: ScopeStore;
-
-  public readonly injectables: InjectableStore;
-
-  public readonly injects: InjectStore;
+export class Container {
+  private readonly container: Warehouse;
 
   constructor() {
-    this.scope = new ScopeStore();
-    this.injectables = new InjectableStore();
-    this.injects = new InjectStore();
-  }
-}
-
-export class Builder {
-  private readonly container: Container;
-
-  constructor() {
-    this.container = new Container();
+    this.container = new Warehouse();
   }
 
   public registerInjectable(config: InjectableConfig): void {
@@ -202,8 +204,8 @@ export class Builder {
     const { token, context } = config;
     const { container } = this;
 
-    const injectable = new Handler({ container, context });
+    const dependency = new Dependency({ container, context });
 
-    return injectable.build(token);
+    return dependency.build(token);
   }
 }

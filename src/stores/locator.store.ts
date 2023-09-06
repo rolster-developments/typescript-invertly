@@ -1,8 +1,7 @@
-import { InjectToken } from '../types/inject.type';
-import { InjectableToken } from '../types/injectable.type';
-import { LocatorConfig } from '../types/locator.type';
+import { InjectableToken, InjectToken, LocatorConfig } from '../types';
 
 type Reference = string | symbol | LocatorConfig;
+type Config<T> = Undefined<LocatorConfig<T>>;
 
 class LocatorStore {
   private collection: Map<InjectToken, LocatorConfig>;
@@ -42,8 +41,6 @@ export function pushInLocator(reference: Reference, token?: InjectableToken): vo
   locator.push(reference, token);
 }
 
-export function fetchInLocator<T = unknown>(
-  token: InjectToken<T>
-): Undefined<LocatorConfig<T>> {
+export function fetchInLocator<T = unknown>(token: InjectToken<T>): Config<T> {
   return locator.fetch(token);
 }

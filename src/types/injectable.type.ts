@@ -1,5 +1,5 @@
-import { Context } from '../stores/context.store';
 import { Constructable } from './constructable.type';
+import { AbstractContext } from './context.type';
 
 export type InjectableToken<T = unknown> =
   | Object
@@ -15,5 +15,5 @@ export interface InjectableConfig<T = unknown> {
 
 export interface InjectionConfig<T> {
   token: InjectableToken<T>;
-  context?: Context;
+  context?: AbstractContext;
 }
