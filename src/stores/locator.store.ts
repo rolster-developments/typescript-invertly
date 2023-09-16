@@ -31,19 +31,19 @@ class LocatorStore {
   }
 }
 
-const locator = new LocatorStore();
+const locatorStore = new LocatorStore();
 
 export function saveInLocator(dependencies: LocatorConfig[]): void {
-  locator.save(dependencies);
+  locatorStore.save(dependencies);
 }
 
 export function pushInLocator(
   reference: Reference,
   token?: InjectableToken
 ): void {
-  locator.push(reference, token);
+  locatorStore.push(reference, token);
 }
 
 export function fetchInLocator<T = unknown>(token: InjectToken<T>): Config<T> {
-  return locator.fetch(token);
+  return locatorStore.fetch(token);
 }

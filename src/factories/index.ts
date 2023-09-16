@@ -28,24 +28,24 @@ interface Inject {
 
 const rootContainer = new Container();
 
-function createFromInvertly<T = unknown>({
+const createFromInvertly = <T = unknown>({
   config,
   container
-}: Injection<T>): T {
+}: Injection<T>): T => {
   return (container || rootContainer).createInjectable(config);
-}
+};
 
-export function invertly<T = unknown>({ token, container }: Token<T>): T {
+export const invertly = <T = unknown>({ token, container }: Token<T>): T => {
   return createFromInvertly({ config: { token }, container });
-}
+};
 
-export function registerInjectable({ config, container }: Injectable): void {
+export const registerInjectable = ({ config, container }: Injectable): void => {
   (container || rootContainer).registerInjectable(config);
-}
+};
 
-export function registerInject({ config, container }: Inject): void {
+export const registerInject = ({ config, container }: Inject): void => {
   (container || rootContainer).registerInject(config);
-}
+};
 
 export { Container } from './container.factory';
 
