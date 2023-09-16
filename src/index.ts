@@ -13,6 +13,11 @@ export {
   pushInLocator,
   saveInLocator
 } from './stores';
-export { InjectableToken, InjectToken, LocatorConfig } from './types';
+export {
+  Constructable,
+  InjectableToken,
+  InjectToken,
+  LocatorConfig
+} from './types';
 
 export default createFromInvertly;
