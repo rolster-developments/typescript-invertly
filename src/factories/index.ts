@@ -6,22 +6,21 @@ import {
   InjectionConfig
 } from '../types';
 
-interface Injection<T> {
+interface InjectionOptions<T> {
   config: InjectionConfig<T>;
   container?: Container;
 }
 
-interface Token<T> {
-  token: InjectableToken<T>;
+interface InvertlyOptions {
   container?: Container;
 }
 
-interface Injectable {
+interface InjectableOptions {
   config: InjectableConfig;
   container?: Container;
 }
 
-interface Inject {
+interface InjectOptions {
   config: InjectConfig;
   container?: Container;
 }
@@ -31,19 +30,25 @@ const rootContainer = new Container();
 const createFromInvertly = <T = unknown>({
   config,
   container
-}: Injection<T>): T => {
+}: InjectionOptions<T>): T => {
   return (container || rootContainer).createInjectable(config);
 };
 
-export const invertly = <T = unknown>({ token, container }: Token<T>): T => {
+export const invertly = <T = unknown>(
+  token: InjectableToken<T>,
+  { container }: InvertlyOptions
+): T => {
   return createFromInvertly({ config: { token }, container });
 };
 
-export const registerInjectable = ({ config, container }: Injectable): void => {
+export const registerInjectable = ({
+  config,
+  container
+}: InjectableOptions): void => {
   (container || rootContainer).registerInjectable(config);
 };
 
-export const registerInject = ({ config, container }: Inject): void => {
+export const registerInject = ({ config, container }: InjectOptions): void => {
   (container || rootContainer).registerInject(config);
 };
 
