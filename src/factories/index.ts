@@ -36,7 +36,7 @@ const createFromInvertly = <T = unknown>({
 
 export const invertly = <T = unknown>(
   token: InjectableToken<T>,
-  { container }: InvertlyOptions
+  { container }: InvertlyOptions = {}
 ): T => {
   return createFromInvertly({ config: { token }, container });
 };
