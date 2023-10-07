@@ -4,6 +4,7 @@ export { Factory, Injectable, Scope, Singleton } from './decorators';
 export {
   Container,
   invertly,
+  registerDependency,
   registerInject,
   registerInjectable
 } from './factories';
