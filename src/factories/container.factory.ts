@@ -179,14 +179,11 @@ class Dependency {
   private createTokenArgs<T>(token: InjectableToken<T>): unknown[] {
     const injects = this.warehouse.injects.fetch(token);
 
-    return injects.reduce(
-      (objects: unknown[], { index, scopeable, singleton, token }) => {
-        objects[index] = this.createInstance({ token, scopeable, singleton });
+    return injects.reduce((objects, { index, scopeable, singleton, token }) => {
+      objects[index] = this.createInstance({ token, scopeable, singleton });
 
-        return objects;
-      },
-      []
-    );
+      return objects;
+    }, [] as unknown[]);
   }
 }
 
