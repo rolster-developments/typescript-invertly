@@ -18,7 +18,7 @@ import {
 type Tokens = Undefined<InjectableToken[]>;
 
 interface InjectableProps {
-  container: Warehouse;
+  warehouse: Warehouse;
   context?: AbstractContext;
 }
 
@@ -54,21 +54,21 @@ class Warehouse {
 }
 
 class Dependency {
-  private container: Warehouse;
+  private warehouse: Warehouse;
 
   private scope: ScopeStore;
 
   private context?: AbstractContext;
 
-  constructor({ container, context }: InjectableProps) {
-    this.container = container;
+  constructor({ warehouse, context }: InjectableProps) {
+    this.warehouse = warehouse;
     this.context = context;
 
     this.scope = new ScopeStore();
   }
 
   public build<T = unknown>(injectable: InjectableToken<T>): T {
-    const config = this.container.injectables.fetch(injectable);
+    const config = this.warehouse.injectables.fetch(injectable);
 
     if (!config) {
       throw Error(
@@ -113,7 +113,7 @@ class Dependency {
 
   private createFromContainer<T = unknown>(token: InjectableToken<T>): T {
     const {
-      container: { scope }
+      warehouse: { scope }
     } = this;
 
     return this.createFromScope({ token, scope });
@@ -149,9 +149,9 @@ class Dependency {
   }
 
   private createReflectArgs<T>({ tokens, token }: ReflectProps<T>): unknown[] {
-    const { container, context } = this;
+    const { warehouse, context } = this;
 
-    const injects = container.injects.fetch(token);
+    const injects = warehouse.injects.fetch(token);
 
     return tokens.map((token, index) => {
       const inject = injects[index];
@@ -177,36 +177,39 @@ class Dependency {
   }
 
   private createTokenArgs<T>(token: InjectableToken<T>): unknown[] {
-    const injects = this.container.injects.fetch(token);
+    const injects = this.warehouse.injects.fetch(token);
 
-    return injects.reduce((objects: unknown[], { token }, index) => {
-      objects[index] = this.createObject(token);
+    return injects.reduce(
+      (objects: unknown[], { index, scopeable, singleton, token }) => {
+        objects[index] = this.createInstance({ token, scopeable, singleton });
 
-      return objects;
-    }, []);
+        return objects;
+      },
+      []
+    );
   }
 }
 
 export class Container {
-  private readonly container: Warehouse;
+  private readonly warehouse: Warehouse;
 
   constructor() {
-    this.container = new Warehouse();
+    this.warehouse = new Warehouse();
   }
 
   public registerInjectable(config: InjectableConfig): void {
-    this.container.injectables.push(config);
+    this.warehouse.injectables.push(config);
   }
 
   public registerInject(config: InjectConfig): void {
-    this.container.injects.push(config);
+    this.warehouse.injects.push(config);
   }
 
   public createInjectable<T = unknown>(config: InjectionConfig<T>): T {
     const { token, context } = config;
-    const { container } = this;
+    const { warehouse } = this;
 
-    const dependency = new Dependency({ container, context });
+    const dependency = new Dependency({ warehouse, context });
 
     return dependency.build(token);
   }
