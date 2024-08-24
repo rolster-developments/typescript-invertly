@@ -1,24 +1,24 @@
-import { InjectableToken, InjectConfig } from '../types';
+import { InjectableToken, InjectOptions } from '../types';
 
 export class InjectStore {
-  private collection: Map<InjectableToken, InjectConfig[]> = new Map();
+  private collection: Map<InjectableToken, InjectOptions[]> = new Map();
 
-  public push(config: InjectConfig): void {
-    const { parent, index } = config;
+  public push(options: InjectOptions): void {
+    const { parent, index } = options;
 
-    const injects = this.fetch(parent);
+    const injects = this.request(parent);
 
-    injects[index] = config;
+    injects[index] = options;
   }
 
-  public fetch(token: InjectableToken): InjectConfig[] {
+  public request(token: InjectableToken): InjectOptions[] {
     const current = this.collection.get(token);
 
     if (current) {
       return current;
     }
 
-    const injects: InjectConfig[] = [];
+    const injects: InjectOptions[] = [];
 
     this.collection.set(token, injects);
 

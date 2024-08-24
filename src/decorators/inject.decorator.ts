@@ -7,26 +7,22 @@ interface Inject {
   singleton: boolean;
 }
 
-const createInject = ({
-  scopeable,
-  singleton,
-  token
-}: Inject): ParameterDecorator => {
+function createInject(inject: Inject): ParameterDecorator {
+  const { scopeable, singleton, token } = inject;
+
   return (parent, _, index) => {
-    registerInject({
-      config: { index, parent, scopeable, singleton, token }
-    });
+    registerInject({ index, parent, scopeable, singleton, token });
   };
-};
+}
 
-export const Singleton = (token: InjectToken): ParameterDecorator => {
+export function Singleton(token: InjectToken): ParameterDecorator {
   return createInject({ token, scopeable: false, singleton: true });
-};
+}
 
-export const Scope = (token: InjectToken): ParameterDecorator => {
+export function Scope(token: InjectToken): ParameterDecorator {
   return createInject({ token, scopeable: true, singleton: false });
-};
+}
 
-export const Factory = (token: InjectToken): ParameterDecorator => {
+export function Factory(token: InjectToken): ParameterDecorator {
   return createInject({ token, scopeable: false, singleton: false });
-};
+}

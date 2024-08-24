@@ -1,8 +1,8 @@
 import { InjectableToken } from './injectable.type';
 
-export type InjectToken<T = unknown> = InjectableToken<T> | string | symbol;
+export type InjectToken<T = any> = InjectableToken<T> | string | symbol;
 
-export type InjectConfig<T = unknown> = {
+export type InjectOptions<T = any> = {
   index: number;
   parent: InjectableToken;
   scopeable: boolean;

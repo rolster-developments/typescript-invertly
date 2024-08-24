@@ -10,7 +10,7 @@ export {
 } from './factories';
 export {
   Context,
-  fetchInLocator,
+  requestInLocator,
   pushInLocator,
   saveInLocator
 } from './stores';
@@ -18,7 +18,7 @@ export {
   Constructable,
   InjectableToken,
   InjectToken,
-  LocatorConfig
+  LocatorOptions
 } from './types';
 
 export default createFromInvertly;

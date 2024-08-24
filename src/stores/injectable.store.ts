@@ -1,15 +1,15 @@
-import { InjectableConfig, InjectableToken } from '../types';
+import { InjectableOptions, InjectableToken } from '../types';
 
-type Config<T> = Undefined<InjectableConfig<T>>;
+type Options<T> = Undefined<InjectableOptions<T>>;
 
 export class InjectableStore {
-  private collection: Map<InjectableToken, InjectableConfig> = new Map();
+  private collection: Map<InjectableToken, InjectableOptions> = new Map();
 
-  public push(config: InjectableConfig): void {
-    this.collection.set(config.token, config);
+  public push(options: InjectableOptions): void {
+    this.collection.set(options.token, options);
   }
 
-  public fetch<T = unknown>(token: InjectableToken<T>): Config<T> {
+  public request<T = any>(token: InjectableToken<T>): Options<T> {
     return this.collection.get(token);
   }
 }

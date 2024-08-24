@@ -1,7 +1,7 @@
 import { InjectToken } from './inject.type';
 import { InjectableToken } from './injectable.type';
 
-export type LocatorConfig<T = unknown> = {
+export type LocatorOptions<T = any> = {
   token: InjectToken;
   useClass: InjectableToken<T>;
   scopeable?: boolean;

@@ -4,37 +4,37 @@ import {
   InjectStore,
   InjectableStore,
   ScopeStore,
-  fetchInLocator
+  requestInLocator
 } from '../stores';
 import {
   AbstractContext,
   Constructable,
-  InjectConfig,
-  InjectableConfig,
+  InjectOptions,
+  InjectableOptions,
   InjectableToken,
-  InjectionConfig
+  InjectionOptions
 } from '../types';
 
 type Tokens = Undefined<InjectableToken[]>;
 
-interface InjectableProps {
+interface DependencyOptions {
   warehouse: Warehouse;
   context?: AbstractContext;
 }
 
-interface InstanceProps<T> {
+interface InstanceOptions<T> {
   token: InjectableToken<T>;
   scopeable?: boolean;
   singleton?: boolean;
 }
 
-interface ScopeProps<T> {
+interface ScopeOptions<T> {
   token: InjectableToken<T>;
   scope: ScopeStore;
   context?: AbstractContext;
 }
 
-interface ReflectProps<T> {
+interface ReflectOptions<T> {
   token: InjectableToken<T>;
   tokens: InjectableToken[];
 }
@@ -60,15 +60,15 @@ class Dependency {
 
   private context?: AbstractContext;
 
-  constructor({ warehouse, context }: InjectableProps) {
+  constructor({ warehouse, context }: DependencyOptions) {
     this.warehouse = warehouse;
     this.context = context;
 
     this.scope = new ScopeStore();
   }
 
-  public build<T = unknown>(injectable: InjectableToken<T>): T {
-    const config = this.warehouse.injectables.fetch(injectable);
+  public build<T = any>(injectable: InjectableToken<T>): T {
+    const config = this.warehouse.injectables.request(injectable);
 
     if (!config) {
       throw Error(
@@ -81,8 +81,8 @@ class Dependency {
     return this.createInstance({ token, scopeable, singleton });
   }
 
-  private createObject<T = unknown>(token: InjectableToken<T>): T {
-    const Constructor = token as unknown as Constructable<T>;
+  private createObject<T = any>(token: InjectableToken<T>): T {
+    const Constructor = token as any as Constructable<T>;
 
     const tokens = this.reflectTokens(Constructor);
 
@@ -97,8 +97,8 @@ class Dependency {
     return Reflect.getMetadata('design:paramtypes', reference);
   }
 
-  private createFromScope<T = unknown>({ token, scope }: ScopeProps<T>): T {
-    const instance = scope.fetch<T>(token);
+  private createFromScope<T = any>({ token, scope }: ScopeOptions<T>): T {
+    const instance = scope.request<T>(token);
 
     if (instance) {
       return instance;
@@ -111,7 +111,7 @@ class Dependency {
     return object;
   }
 
-  private createFromContainer<T = unknown>(token: InjectableToken<T>): T {
+  private createFromContainer<T = any>(token: InjectableToken<T>): T {
     const {
       warehouse: { scope }
     } = this;
@@ -119,7 +119,7 @@ class Dependency {
     return this.createFromScope({ token, scope });
   }
 
-  private createInstance<T = unknown>(props: InstanceProps<T>): T {
+  private createInstance<T = any>(props: InstanceOptions<T>): T {
     const { token, scopeable, singleton } = props;
     const { scope } = this;
 
@@ -134,10 +134,10 @@ class Dependency {
     return this.createObject(token);
   }
 
-  private createFromDecorator<T = unknown>(inject: InjectConfig<T>): T {
+  private createFromDecorator<T = any>(inject: InjectOptions<T>): T {
     const { token, scopeable, singleton } = inject;
 
-    const locator = fetchInLocator(token);
+    const locator = requestInLocator(token);
 
     if (locator) {
       const { useClass: token } = locator;
@@ -148,10 +148,10 @@ class Dependency {
     return this.createInstance({ token, scopeable, singleton });
   }
 
-  private createReflectArgs<T>({ tokens, token }: ReflectProps<T>): unknown[] {
+  private createReflectArgs<T>({ tokens, token }: ReflectOptions<T>): any[] {
     const { warehouse, context } = this;
 
-    const injects = warehouse.injects.fetch(token);
+    const injects = warehouse.injects.request(token);
 
     return tokens.map((token, index) => {
       const inject = injects[index];
@@ -160,7 +160,7 @@ class Dependency {
         return this.createFromDecorator(inject);
       }
 
-      const locator = fetchInLocator(token);
+      const locator = requestInLocator(token);
 
       if (locator) {
         const { useClass: token, scopeable, singleton } = locator;
@@ -176,14 +176,14 @@ class Dependency {
     });
   }
 
-  private createTokenArgs<T>(token: InjectableToken<T>): unknown[] {
-    const injects = this.warehouse.injects.fetch(token);
+  private createTokenArgs<T>(token: InjectableToken<T>): any[] {
+    const injects = this.warehouse.injects.request(token);
 
     return injects.reduce((objects, { index, scopeable, singleton, token }) => {
       objects[index] = this.createInstance({ token, scopeable, singleton });
 
       return objects;
-    }, [] as unknown[]);
+    }, [] as any[]);
   }
 }
 
@@ -194,16 +194,16 @@ export class Container {
     this.warehouse = new Warehouse();
   }
 
-  public registerInjectable(config: InjectableConfig): void {
-    this.warehouse.injectables.push(config);
+  public registerInjectable(options: InjectableOptions): void {
+    this.warehouse.injectables.push(options);
   }
 
-  public registerInject(config: InjectConfig): void {
-    this.warehouse.injects.push(config);
+  public registerInject(options: InjectOptions): void {
+    this.warehouse.injects.push(options);
   }
 
-  public createInjectable<T = unknown>(config: InjectionConfig<T>): T {
-    const { token, context } = config;
+  public createInjectable<T = any>(options: InjectionOptions<T>): T {
+    const { token, context } = options;
     const { warehouse } = this;
 
     const dependency = new Dependency({ warehouse, context });

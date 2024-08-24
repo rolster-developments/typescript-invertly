@@ -1,32 +1,13 @@
-import { Container } from './container.factory';
 import {
-  InjectConfig,
+  InjectOptions,
   InjectToken,
-  InjectableConfig,
+  InjectableOptions,
   InjectableToken,
-  InjectionConfig
+  InjectionOptions
 } from '../types';
+import { Container } from './container.factory';
 
-interface InjectionOptions<T> {
-  config: InjectionConfig<T>;
-  container?: Container;
-}
-
-interface InvertlyOptions {
-  container?: Container;
-}
-
-interface InjectableOptions {
-  config: InjectableConfig;
-  container?: Container;
-}
-
-interface InjectOptions {
-  config: InjectConfig;
-  container?: Container;
-}
-
-interface DependencyConfig<T = unknown> {
+interface Inject<T = any> {
   token: InjectToken<T>;
   index?: number;
   scopeable?: boolean;
@@ -35,52 +16,55 @@ interface DependencyConfig<T = unknown> {
 
 interface DependencyOptions {
   container?: Container;
-  injects?: DependencyConfig[];
+  injects?: Inject[];
   scopeable?: boolean;
   singleton?: boolean;
 }
 
-const rootContainer = new Container();
+const invertlyContainer = new Container();
 
-const createFromInvertly = <T = unknown>(options: InjectionOptions<T>): T => {
-  const { config, container } = options;
+function createFromInvertly<T = any>(
+  options: InjectionOptions<T>,
+  container?: Container
+): T {
+  return (container || invertlyContainer).createInjectable(options);
+}
 
-  return (container || rootContainer).createInjectable(config);
-};
-
-export const invertly = <T = unknown>(
+export function invertly<T = any>(
   token: InjectableToken<T>,
-  { container }: InvertlyOptions = {}
-): T => {
-  return createFromInvertly({ config: { token }, container });
-};
+  container?: Container
+): T {
+  return createFromInvertly({ token }, container);
+}
 
-export const registerInjectable = (options: InjectableOptions): void => {
-  const { config, container } = options;
+export function registerInjectable(
+  options: InjectableOptions,
+  container?: Container
+): void {
+  (container || invertlyContainer).registerInjectable(options);
+}
 
-  (container || rootContainer).registerInjectable(config);
-};
+export function registerInject(
+  options: InjectOptions,
+  container?: Container
+): void {
+  (container || invertlyContainer).registerInject(options);
+}
 
-export const registerInject = (options: InjectOptions): void => {
-  const { config, container } = options;
-
-  (container || rootContainer).registerInject(config);
-};
-
-export const registerDependency = <T = unknown>(
+export function registerDependency<T = any>(
   token: InjectableToken<T>,
   options: DependencyOptions
-): void => {
+): void {
   const { container, injects, scopeable, singleton } = options;
 
-  registerInjectable({
-    config: {
+  registerInjectable(
+    {
       token,
       scopeable: scopeable || false,
       singleton: singleton || false
     },
     container
-  });
+  );
 
   injects?.forEach((inject, indexParent) => {
     const {
@@ -90,8 +74,8 @@ export const registerDependency = <T = unknown>(
       token: childrenToken
     } = inject;
 
-    registerInject({
-      config: {
+    registerInject(
+      {
         index: index || indexParent,
         parent: token,
         scopeable: childrenScopeable || scopeable || false,
@@ -99,9 +83,9 @@ export const registerDependency = <T = unknown>(
         token: childrenToken
       },
       container
-    });
+    );
   });
-};
+}
 
 export { Container } from './container.factory';
 
