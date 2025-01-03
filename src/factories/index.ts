@@ -27,7 +27,7 @@ function createFromInvertly<T = any>(
   options: InjectionOptions<T>,
   container?: Container
 ): T {
-  return (container || invertlyContainer).createInjectable(options);
+  return (container ?? invertlyContainer).createInjectable(options);
 }
 
 export function invertly<T = any>(
@@ -41,14 +41,14 @@ export function registerInjectable(
   options: InjectableOptions,
   container?: Container
 ): void {
-  (container || invertlyContainer).registerInjectable(options);
+  (container ?? invertlyContainer).registerInjectable(options);
 }
 
 export function registerInject(
   options: InjectOptions,
   container?: Container
 ): void {
-  (container || invertlyContainer).registerInject(options);
+  (container ?? invertlyContainer).registerInject(options);
 }
 
 export function registerDependency<T = any>(
@@ -60,8 +60,8 @@ export function registerDependency<T = any>(
   registerInjectable(
     {
       token,
-      scopeable: scopeable || false,
-      singleton: singleton || false
+      scopeable: scopeable ?? false,
+      singleton: singleton ?? false
     },
     container
   );
@@ -76,10 +76,10 @@ export function registerDependency<T = any>(
 
     registerInject(
       {
-        index: index || indexParent,
+        index: index ?? indexParent,
         parent: token,
-        scopeable: childrenScopeable || scopeable || false,
-        singleton: childrenSingleton || singleton || false,
+        scopeable: childrenScopeable ?? scopeable ?? false,
+        singleton: childrenSingleton ?? singleton ?? false,
         token: childrenToken
       },
       container
