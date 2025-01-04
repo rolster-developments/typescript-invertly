@@ -1,17 +1,15 @@
 import { registerInject } from '../factories';
 import { InjectToken } from '../types';
 
-interface Inject {
+interface InjectOptions {
   token: InjectToken;
   scopeable: boolean;
   singleton: boolean;
 }
 
-function createInject(inject: Inject): ParameterDecorator {
-  const { scopeable, singleton, token } = inject;
-
+function createInject(inject: InjectOptions): ParameterDecorator {
   return (parent, _, index) => {
-    registerInject({ index, parent, scopeable, singleton, token });
+    registerInject({ ...inject, index, parent });
   };
 }
 

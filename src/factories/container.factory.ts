@@ -34,32 +34,24 @@ interface ReflectOptions<T> {
   tokens: InjectableToken[];
 }
 
-class Warehouse {
-  public readonly scope: ScopeStore;
+class DataCenter {
+  public readonly scope = new ScopeStore();
 
-  public readonly injectables: InjectableStore;
+  public readonly injectables = new InjectableStore();
 
-  public readonly injects: InjectStore;
-
-  constructor() {
-    this.scope = new ScopeStore();
-    this.injectables = new InjectableStore();
-    this.injects = new InjectStore();
-  }
+  public readonly injects = new InjectStore();
 }
 
-class Dependency {
-  private scope: ScopeStore;
+class InjectableFactory {
+  private readonly scope = new ScopeStore();
 
   constructor(
-    private warehouse: Warehouse,
+    private dataCenter: DataCenter,
     private context?: AbstractContext
-  ) {
-    this.scope = new ScopeStore();
-  }
+  ) {}
 
   public build<T = any>(injectable: InjectableToken<T>): T {
-    const options = this.warehouse.injectables.request(injectable);
+    const options = this.dataCenter.injectables.request(injectable);
 
     if (!options) {
       throw Error(
@@ -67,9 +59,7 @@ class Dependency {
       );
     }
 
-    const { scopeable, singleton, token } = options;
-
-    return this.createInstance({ token, scopeable, singleton });
+    return this.createInstance(options);
   }
 
   private createObject<T = any>(token: InjectableToken<T>): T {
@@ -89,21 +79,18 @@ class Dependency {
   }
 
   private createFromScope<T = any>({ token, scope }: ScopeOptions<T>): T {
-    const instance = scope.request<T>(token);
+    let instance = scope.request<T>(token);
 
-    if (instance) {
-      return instance;
+    if (!instance) {
+      instance = this.createObject<T>(token);
+      scope.push(token, instance);
     }
 
-    const object = this.createObject<T>(token);
-
-    scope.push(token, object);
-
-    return object;
+    return instance;
   }
 
   private createFromContainer<T = any>(token: InjectableToken<T>): T {
-    return this.createFromScope({ token, scope: this.warehouse.scope });
+    return this.createFromScope({ token, scope: this.dataCenter.scope });
   }
 
   private createInstance<T = any>(options: InstanceOptions<T>): T {
@@ -133,7 +120,7 @@ class Dependency {
   }
 
   private createReflectArgs<T>({ tokens, token }: ReflectOptions<T>): any[] {
-    const injects = this.warehouse.injects.request(token);
+    const injects = this.dataCenter.injects.request(token);
 
     return tokens.map((token, index) => {
       const inject = injects[index];
@@ -145,9 +132,10 @@ class Dependency {
       const locator = requestInLocator(token);
 
       if (locator) {
-        const { useClass: token, scopeable, singleton } = locator;
-
-        return this.createInstance({ token, scopeable, singleton });
+        return this.createInstance({
+          ...locator,
+          token: locator.useClass
+        });
       }
 
       if (token === Context) {
@@ -159,32 +147,30 @@ class Dependency {
   }
 
   private createTokenArgs<T>(token: InjectableToken<T>): any[] {
-    const injects = this.warehouse.injects.request(token);
+    const injects = this.dataCenter.injects.request(token);
 
-    return injects.reduce((objects, { index, scopeable, singleton, token }) => {
-      objects[index] = this.createInstance({ token, scopeable, singleton });
+    return injects.reduce((objects, options) => {
+      objects[options.index] = this.createInstance({ ...options });
 
       return objects;
     }, [] as any[]);
   }
 }
 
-export class Container {
-  private readonly warehouse: Warehouse;
-
-  constructor() {
-    this.warehouse = new Warehouse();
-  }
+export class InvertlyContainer {
+  private readonly dataCenter = new DataCenter();
 
   public registerInjectable(options: InjectableOptions): void {
-    this.warehouse.injectables.push(options);
+    this.dataCenter.injectables.push(options);
   }
 
   public registerInject(options: InjectOptions): void {
-    this.warehouse.injects.push(options);
+    this.dataCenter.injects.push(options);
   }
 
   public createInjectable<T = any>(options: InjectionOptions<T>): T {
-    return new Dependency(this.warehouse, options.context).build(options.token);
+    return new InjectableFactory(this.dataCenter, options.context).build(
+      options.token
+    );
   }
 }

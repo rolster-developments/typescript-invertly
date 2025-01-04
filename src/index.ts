@@ -2,7 +2,7 @@ import createFromInvertly from './factories';
 
 export { Factory, Injectable, Scope, Singleton } from './decorators';
 export {
-  Container,
+  InvertlyContainer,
   invertly,
   registerDependency,
   registerInject,

@@ -5,7 +5,9 @@ import {
   InjectableToken,
   InjectionOptions
 } from '../types';
-import { Container } from './container.factory';
+import { InvertlyContainer } from './container.factory';
+
+const INVERTLY_CONTAINER = new InvertlyContainer();
 
 interface Inject<T = any> {
   token: InjectToken<T>;
@@ -15,78 +17,67 @@ interface Inject<T = any> {
 }
 
 interface DependencyOptions {
-  container?: Container;
+  container?: InvertlyContainer;
   injects?: Inject[];
   scopeable?: boolean;
   singleton?: boolean;
 }
 
-const invertlyContainer = new Container();
-
 function createFromInvertly<T = any>(
   options: InjectionOptions<T>,
-  container?: Container
+  container?: InvertlyContainer
 ): T {
-  return (container ?? invertlyContainer).createInjectable(options);
+  return (container ?? INVERTLY_CONTAINER).createInjectable(options);
 }
 
 export function invertly<T = any>(
   token: InjectableToken<T>,
-  container?: Container
+  container?: InvertlyContainer
 ): T {
   return createFromInvertly({ token }, container);
 }
 
 export function registerInjectable(
   options: InjectableOptions,
-  container?: Container
+  container?: InvertlyContainer
 ): void {
-  (container ?? invertlyContainer).registerInjectable(options);
+  (container ?? INVERTLY_CONTAINER).registerInjectable(options);
 }
 
 export function registerInject(
   options: InjectOptions,
-  container?: Container
+  container?: InvertlyContainer
 ): void {
-  (container ?? invertlyContainer).registerInject(options);
+  (container ?? INVERTLY_CONTAINER).registerInject(options);
 }
 
 export function registerDependency<T = any>(
   token: InjectableToken<T>,
   options: DependencyOptions
 ): void {
-  const { container, injects, scopeable, singleton } = options;
-
   registerInjectable(
     {
       token,
-      scopeable: scopeable ?? false,
-      singleton: singleton ?? false
+      scopeable: options.scopeable ?? false,
+      singleton: options.singleton ?? false
     },
-    container
+    options.container
   );
 
-  injects?.forEach((inject, indexParent) => {
-    const {
-      index,
-      scopeable: childrenScopeable,
-      singleton: childrenSingleton,
-      token: childrenToken
-    } = inject;
-
+  options.injects?.forEach((inject, indexParent) => {
     registerInject(
       {
-        index: index ?? indexParent,
+        index: inject.index ?? indexParent,
         parent: token,
-        scopeable: childrenScopeable ?? scopeable ?? false,
-        singleton: childrenSingleton ?? singleton ?? false,
-        token: childrenToken
+        scopeable: inject.scopeable ?? options.scopeable ?? false,
+        singleton: inject.singleton ?? options.singleton ?? false,
+        token: inject.token
       },
-      container
+      options.container
     );
   });
 }
 
-export { Container } from './container.factory';
+export { InvertlyContainer } from './container.factory';
 
 export default createFromInvertly;

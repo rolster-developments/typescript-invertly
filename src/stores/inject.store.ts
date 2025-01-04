@@ -1,27 +1,20 @@
+import { SecureMap } from '@rolster/commons';
 import { InjectableToken, InjectOptions } from '../types';
 
 export class InjectStore {
-  private collection: Map<InjectableToken, InjectOptions[]> = new Map();
+  private collection: SecureMap<InjectOptions[], InjectableToken>;
+
+  constructor() {
+    this.collection = new SecureMap(() => []);
+  }
 
   public push(options: InjectOptions): void {
-    const { parent, index } = options;
+    const injects = this.collection.request(options.parent);
 
-    const injects = this.request(parent);
-
-    injects[index] = options;
+    injects[options.index] = options;
   }
 
   public request(token: InjectableToken): InjectOptions[] {
-    const current = this.collection.get(token);
-
-    if (current) {
-      return current;
-    }
-
-    const injects: InjectOptions[] = [];
-
-    this.collection.set(token, injects);
-
-    return injects;
+    return this.collection.request(token);
   }
 }
