@@ -1,4 +1,4 @@
-import { InjectableOptions, InjectableToken } from '../types';
+import { InjectableOptions, InjectableToken } from '../types/injectable.type';
 
 type Options<T> = Undefined<InjectableOptions<T>>;
 

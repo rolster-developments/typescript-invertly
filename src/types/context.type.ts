@@ -1,7 +1,9 @@
 export interface AbstractContext<K = string> {
-  set(key: K, value?: any): void;
+  save(key: K, value?: any): void;
 
-  request<T = any>(key: K): Undefined<T>;
+  findOrNull<T = any>(key: K): Undefined<T>;
 
-  has(key: K): boolean;
+  find<T = any>(key: K): T;
+
+  contain(key: K): boolean;
 }

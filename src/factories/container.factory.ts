@@ -1,19 +1,17 @@
 import 'reflect-metadata';
+import { Context } from '../stores/context.store';
+import { InjectStore } from '../stores/inject.store';
+import { InjectableStore } from '../stores/injectable.store';
+import { requestInLocator } from '../stores/locator.store';
+import { ScopeStore } from '../stores/scope.store';
+import { AbstractContext } from '../types/context.type';
+import { Constructable } from '../types/constructable.type';
 import {
-  Context,
-  InjectStore,
-  InjectableStore,
-  ScopeStore,
-  requestInLocator
-} from '../stores';
-import {
-  AbstractContext,
-  Constructable,
-  InjectOptions,
   InjectableOptions,
   InjectableToken,
   InjectionOptions
-} from '../types';
+} from '../types/injectable.type';
+import { InjectOptions } from '../types/inject.type';
 
 type Tokens = Undefined<InjectableToken[]>;
 

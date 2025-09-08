@@ -1,4 +1,6 @@
-import { InjectableToken, InjectToken, LocatorOptions } from '../types';
+import { InjectToken } from '../types/inject.type';
+import { InjectableToken } from '../types/injectable.type';
+import { LocatorOptions } from '../types/locator.type';
 
 type Reference = string | symbol | LocatorOptions;
 type Options<T> = Undefined<LocatorOptions<T>>;

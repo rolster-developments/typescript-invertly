@@ -1,24 +1,23 @@
-import createFromInvertly from './factories';
+import createFromInvertly from './factories/invertly.factory';
 
-export { Factory, Injectable, Scope, Singleton } from './decorators';
+export { Factory, Scope, Singleton } from './decorators/inject.decorator';
+export { Injectable } from './decorators/injectable.decorator';
 export {
   InvertlyContainer,
   invertly,
   registerDependency,
   registerInject,
   registerInjectable
-} from './factories';
+} from './factories/invertly.factory';
+export { Context } from './stores/context.store';
 export {
-  Context,
   requestInLocator,
   pushInLocator,
   saveInLocator
-} from './stores';
-export {
-  Constructable,
-  InjectableToken,
-  InjectToken,
-  LocatorOptions
-} from './types';
+} from './stores/locator.store';
+export { Constructable } from './types/constructable.type';
+export { InjectToken } from './types/inject.type';
+export { InjectableToken } from './types/injectable.type';
+export { LocatorOptions } from './types/locator.type';
 
 export default createFromInvertly;

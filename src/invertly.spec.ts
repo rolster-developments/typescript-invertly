@@ -1,7 +1,7 @@
 import createFromInvertly, {
   registerInject,
   registerInjectable
-} from './factories';
+} from './factories/invertly.factory';
 
 class PersistentUnit {
   public code = Math.random();

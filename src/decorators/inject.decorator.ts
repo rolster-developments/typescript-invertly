@@ -1,5 +1,5 @@
-import { registerInject } from '../factories';
-import { InjectToken } from '../types';
+import { registerInject } from '../factories/invertly.factory';
+import { InjectToken } from '../types/inject.type';
 
 interface InjectOptions {
   token: InjectToken;

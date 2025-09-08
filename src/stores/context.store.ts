@@ -1,17 +1,21 @@
-import { AbstractContext } from '../types';
+import { AbstractContext } from '../types/context.type';
 
 export class Context<K = string> implements AbstractContext<K> {
   private store: Map<K, any> = new Map();
 
-  public set(key: K, value?: any): void {
+  public save(key: K, value?: any): void {
     this.store.set(key, value);
   }
 
-  public request<T = any>(key: K): Undefined<T> {
+  public findOrNull<T = any>(key: K): Undefined<T> {
     return this.store.get(key);
   }
 
-  public has(key: K): boolean {
+  public find<T = any>(key: K): T {
+    return this.store.get(key);
+  }
+
+  public contain(key: K): boolean {
     return this.store.has(key);
   }
 }

@@ -1,4 +1,4 @@
-import { registerInjectable } from '../factories';
+import { registerInjectable } from '../factories/invertly.factory';
 
 interface InjectableOptions {
   scopeable?: boolean;
