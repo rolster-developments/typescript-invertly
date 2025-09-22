@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { Context } from '../stores/context.store';
 import { InjectStore } from '../stores/inject.store';
 import { InjectableStore } from '../stores/injectable.store';
-import { requestInLocator } from '../stores/locator.store';
+import { findInLocator } from '../stores/locator.store';
 import { ScopeStore } from '../stores/scope.store';
 import { AbstractContext } from '../types/context.type';
 import { Constructable } from '../types/constructable.type';
@@ -108,7 +108,7 @@ class InjectableFactory {
   private createFromDecorator<T = any>(inject: InjectOptions<T>): T {
     const { token, scopeable, singleton } = inject;
 
-    const locator = requestInLocator(token);
+    const locator = findInLocator(token);
 
     return this.createInstance({
       token: locator?.useClass ?? token,
@@ -127,7 +127,7 @@ class InjectableFactory {
         return this.createFromDecorator(inject);
       }
 
-      const locator = requestInLocator(token);
+      const locator = findInLocator(token);
 
       if (locator) {
         return this.createInstance({

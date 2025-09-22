@@ -11,7 +11,7 @@ export {
 } from './factories/invertly.factory';
 export { Context } from './stores/context.store';
 export {
-  requestInLocator,
+  findInLocator,
   pushInLocator,
   saveInLocator
 } from './stores/locator.store';

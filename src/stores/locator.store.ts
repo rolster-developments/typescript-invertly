@@ -22,12 +22,16 @@ class LocatorStore {
     }
   }
 
-  public request<T = unknown>(token: InjectToken<T>): Options<T> {
+  public find<T = unknown>(token: InjectToken<T>): Options<T> {
     return this.collection.get(token);
   }
 }
 
 const LOCATOR_STORE = new LocatorStore();
+
+export function findInLocator<T = any>(token: InjectToken<T>): Options<T> {
+  return LOCATOR_STORE.find(token);
+}
 
 export function saveInLocator(dependencies: LocatorOptions[]): void {
   LOCATOR_STORE.save(dependencies);
@@ -38,8 +42,4 @@ export function pushInLocator(
   token?: InjectableToken
 ): void {
   LOCATOR_STORE.push(reference, token);
-}
-
-export function requestInLocator<T = any>(token: InjectToken<T>): Options<T> {
-  return LOCATOR_STORE.request(token);
 }
