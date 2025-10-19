@@ -7,11 +7,11 @@ export class Context<K = string> implements AbstractContext<K> {
     this.store.set(key, value);
   }
 
-  public findOrNull<T = any>(key: K): Undefined<T> {
+  public findOrNullByKey<T = any>(key: K): Undefined<T> {
     return this.store.get(key);
   }
 
-  public find<T = any>(key: K): T {
+  public findByKey<T = any>(key: K): T {
     return this.store.get(key);
   }
 
