@@ -22,7 +22,7 @@ interface DependencyOptions {
   singleton?: boolean;
 }
 
-function createFromInvertly<T = any>(
+export function createFromInvertly<T = any>(
   options: InjectionOptions<T>,
   container?: InvertlyContainer
 ): T {
@@ -78,5 +78,3 @@ export function registerDependency<T = any>(
 }
 
 export { InvertlyContainer } from './container.factory';
-
-export default createFromInvertly;

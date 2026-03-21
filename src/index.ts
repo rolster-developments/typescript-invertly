@@ -1,8 +1,7 @@
-import createFromInvertly from './factories/invertly.factory';
-
 export { Factory, Scope, Singleton } from './decorators/inject.decorator';
 export { Injectable } from './decorators/injectable.decorator';
 export {
+  createFromInvertly,
   InvertlyContainer,
   invertly,
   registerDependency,
@@ -19,5 +18,3 @@ export { Constructable } from './types/constructable.type';
 export { InjectToken } from './types/inject.type';
 export { InjectableToken } from './types/injectable.type';
 export { LocatorOptions } from './types/locator.type';
-
-export default createFromInvertly;
