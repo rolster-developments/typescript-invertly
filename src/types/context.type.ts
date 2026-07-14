@@ -1,9 +1,9 @@
 export interface AbstractContext<K = string> {
-  save(key: K, value?: any): void;
-
-  findOrNullByKey<T = any>(key: K): Undefined<T>;
+  contain(key: K): boolean;
 
   findByKey<T = any>(key: K): T;
 
-  contain(key: K): boolean;
+  findOrNullByKey<T = any>(key: K): Undefined<T>;
+
+  save(key: K, value?: any): void;
 }

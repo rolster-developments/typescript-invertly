@@ -2,8 +2,8 @@ export { Factory, Scope, Singleton } from './decorators/inject.decorator';
 export { Injectable } from './decorators/injectable.decorator';
 export {
   createFromInvertly,
-  InvertlyContainer,
   invertly,
+  InvertlyContainer,
   registerDependency,
   registerInject,
   registerInjectable

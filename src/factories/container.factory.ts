@@ -1,17 +1,18 @@
-import 'reflect-metadata';
 import { Context } from '../stores/context.store';
 import { InjectStore } from '../stores/inject.store';
 import { InjectableStore } from '../stores/injectable.store';
 import { findInLocator } from '../stores/locator.store';
 import { ScopeStore } from '../stores/scope.store';
-import { AbstractContext } from '../types/context.type';
 import { Constructable } from '../types/constructable.type';
+import { AbstractContext } from '../types/context.type';
+import { InjectOptions } from '../types/inject.type';
 import {
   InjectableOptions,
   InjectableToken,
   InjectionOptions
 } from '../types/injectable.type';
-import { InjectOptions } from '../types/inject.type';
+
+import 'reflect-metadata';
 
 type Tokens = Undefined<InjectableToken[]>;
 
@@ -22,8 +23,8 @@ interface InstanceOptions<T> {
 }
 
 interface ScopeOptions<T> {
-  token: InjectableToken<T>;
   scope: ScopeStore;
+  token: InjectableToken<T>;
   context?: AbstractContext;
 }
 

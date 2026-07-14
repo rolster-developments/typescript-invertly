@@ -2,7 +2,7 @@ import { Constructable } from './constructable.type';
 import { AbstractContext } from './context.type';
 
 export type InjectableToken<T = any> =
-  | Object
+  | object
   | Function
   | CallableFunction
   | Constructable<T>;

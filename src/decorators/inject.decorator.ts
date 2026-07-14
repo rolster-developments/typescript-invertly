@@ -2,9 +2,9 @@ import { registerInject } from '../factories/invertly.factory';
 import { InjectToken } from '../types/inject.type';
 
 interface InjectOptions {
-  token: InjectToken;
   scopeable: boolean;
   singleton: boolean;
+  token: InjectToken;
 }
 
 function createInject(inject: InjectOptions): ParameterDecorator {
