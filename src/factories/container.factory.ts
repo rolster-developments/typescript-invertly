@@ -5,12 +5,12 @@ import { findInLocator } from '../stores/locator.store';
 import { ScopeStore } from '../stores/scope.store';
 import { Constructable } from '../types/constructable.type';
 import { AbstractContext } from '../types/context.type';
-import { InjectOptions, InjectToken } from '../types/inject.type';
 import {
-  InjectableOptions,
-  InjectableToken,
-  InjectionOptions
-} from '../types/injectable.type';
+  InjectionOptions,
+  InjectOptions,
+  InjectToken
+} from '../types/inject.type';
+import { InjectableOptions, InjectableToken } from '../types/injectable.type';
 
 import 'reflect-metadata';
 
@@ -49,16 +49,22 @@ class InjectableFactory {
     private context?: AbstractContext
   ) {}
 
-  public build<T = any>(injectable: InjectableToken<T>): T {
+  public build<T = any>(token: InjectToken<T>): T {
+    const locator = findInLocator(token);
+
+    const injectable = locator?.useClass ?? (token as InjectableToken<T>);
+
     const options = this.dataCenter.injectables.request(injectable);
 
-    if (!options) {
-      throw Error(
-        `Class ${injectable.toString()} is not found in the collection`
-      );
+    if (options) {
+      return this.createInstance(options);
     }
 
-    return this.createInstance(options);
+    if (locator) {
+      return this.createInstance({ ...locator, token: injectable });
+    }
+
+    throw Error(`Token ${String(token)} is not found in the collection`);
   }
 
   private createObject<T = any>(token: InjectToken<T>): T {
