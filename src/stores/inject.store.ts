@@ -1,5 +1,4 @@
 import { SecureMap } from '@rolster/commons';
-
 import { InjectOptions, InjectToken } from '../types/injectable.type';
 
 export class InjectStore {
