@@ -16,4 +16,8 @@ export {
 } from './stores/locator.store';
 export { Constructable } from './types/constructable.type';
 export { InjectableToken, InjectToken } from './types/injectable.type';
-export { LocatorOptions } from './types/locator.type';
+export {
+  LocatorClassOptions,
+  LocatorOptions,
+  LocatorValueOptions
+} from './types/locator.type';

@@ -53,6 +53,10 @@ class InjectableFactory {
   public build<T = any>(token: InjectToken<T>): T {
     const locator = findInLocator(token);
 
+    if (locator && 'useValue' in locator) {
+      return locator.useValue;
+    }
+
     const injectable = locator?.useClass ?? (token as InjectableToken<T>);
 
     const options = this.dataCenter.injectables.request(injectable);
@@ -118,6 +122,10 @@ class InjectableFactory {
 
     const locator = findInLocator(token);
 
+    if (locator && 'useValue' in locator) {
+      return locator.useValue;
+    }
+
     return this.createInstance({
       token: locator?.useClass ?? token,
       scopeable,
@@ -138,10 +146,9 @@ class InjectableFactory {
       const locator = findInLocator(token);
 
       if (locator) {
-        return this.createInstance({
-          ...locator,
-          token: locator.useClass
-        });
+        return 'useValue' in locator
+          ? locator.useValue
+          : this.createInstance({ ...locator, token: locator.useClass });
       }
 
       if (token === Context) {

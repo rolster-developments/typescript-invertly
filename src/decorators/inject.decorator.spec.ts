@@ -51,6 +51,23 @@ describe('inject decorators', () => {
     expect(second.dep).toBe(first.dep);
   });
 
+  it('injects a registered value as-is through param decorators', () => {
+    const config = { locale: 'es-CO' };
+
+    pushInLocator({ token: 'I18N_CONFIG', useValue: config });
+
+    @Injectable()
+    class ConfigConsumer {
+      constructor(@Singleton('I18N_CONFIG') public config: unknown) {}
+    }
+
+    const first = invertly<ConfigConsumer>(ConfigConsumer);
+    const second = invertly<ConfigConsumer>(ConfigConsumer);
+
+    expect(first.config).toBe(config);
+    expect(second.config).toBe(config);
+  });
+
   it('Scope shares the dependency within a single resolution only', () => {
     class ScopeDep {}
 

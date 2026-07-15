@@ -167,4 +167,67 @@ describe('createFromInvertly', () => {
     expect(instance.context).toBe(context);
     expect(instance.context.findByKey('requestId')).toBe('abc-123');
   });
+
+  it('resolves a value registered under a string token', () => {
+    const config = { apiUrl: 'https://api.rolster.dev' };
+
+    saveInLocator([{ token: 'APP_CONFIG', useValue: config }]);
+
+    const container = new InvertlyContainer();
+
+    expect(createFromInvertly({ token: 'APP_CONFIG' }, container)).toBe(
+      config
+    );
+  });
+
+  it('resolves falsy values registered with useValue', () => {
+    saveInLocator([{ token: 'RETRY_COUNT', useValue: 0 }]);
+
+    const container = new InvertlyContainer();
+
+    expect(createFromInvertly({ token: 'RETRY_COUNT' }, container)).toBe(0);
+  });
+
+  it('overrides an injectable registration with a value keyed by its class', () => {
+    class HttpService {}
+
+    const stub = new HttpService();
+    const container = new InvertlyContainer();
+
+    registerInjectable(
+      { token: HttpService, scopeable: false, singleton: false },
+      container
+    );
+
+    saveInLocator([{ token: HttpService, useValue: stub }]);
+
+    expect(createFromInvertly({ token: HttpService }, container)).toBe(stub);
+  });
+
+  it('injects a value into constructor params resolved by reflection', () => {
+    class ValueDep {}
+
+    class ValueParent {
+      constructor(public dep: ValueDep) {}
+    }
+
+    Reflect.defineMetadata('design:paramtypes', [ValueDep], ValueParent);
+
+    const dep = new ValueDep();
+    const container = new InvertlyContainer();
+
+    registerInjectable(
+      { token: ValueParent, scopeable: false, singleton: false },
+      container
+    );
+
+    saveInLocator([{ token: ValueDep, useValue: dep }]);
+
+    const instance = createFromInvertly<ValueParent>(
+      { token: ValueParent },
+      container
+    );
+
+    expect(instance.dep).toBe(dep);
+  });
 });
