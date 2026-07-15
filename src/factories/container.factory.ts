@@ -5,7 +5,7 @@ import { findInLocator } from '../stores/locator.store';
 import { ScopeStore } from '../stores/scope.store';
 import { Constructable } from '../types/constructable.type';
 import { AbstractContext } from '../types/context.type';
-import { InjectOptions } from '../types/inject.type';
+import { InjectOptions, InjectToken } from '../types/inject.type';
 import {
   InjectableOptions,
   InjectableToken,
@@ -17,19 +17,19 @@ import 'reflect-metadata';
 type Tokens = Undefined<InjectableToken[]>;
 
 interface InstanceOptions<T> {
-  token: InjectableToken<T>;
+  token: InjectToken<T>;
   scopeable?: boolean;
   singleton?: boolean;
 }
 
 interface ScopeOptions<T> {
   scope: ScopeStore;
-  token: InjectableToken<T>;
+  token: InjectToken<T>;
   context?: AbstractContext;
 }
 
 interface ReflectOptions<T> {
-  token: InjectableToken<T>;
+  token: InjectToken<T>;
   tokens: InjectableToken[];
 }
 
@@ -61,7 +61,7 @@ class InjectableFactory {
     return this.createInstance(options);
   }
 
-  private createObject<T = any>(token: InjectableToken<T>): T {
+  private createObject<T = any>(token: InjectToken<T>): T {
     const Constructor = token as any as Constructable<T>;
 
     const tokens = this.reflectTokens(Constructor);
@@ -88,7 +88,7 @@ class InjectableFactory {
     return instance;
   }
 
-  private createFromContainer<T = any>(token: InjectableToken<T>): T {
+  private createFromContainer<T = any>(token: InjectToken<T>): T {
     return this.createFromScope({ token, scope: this.dataCenter.scope });
   }
 
@@ -145,7 +145,7 @@ class InjectableFactory {
     });
   }
 
-  private createTokenArgs<T>(token: InjectableToken<T>): any[] {
+  private createTokenArgs<T>(token: InjectToken<T>): any[] {
     const injects = this.dataCenter.injects.request(token);
 
     return injects.reduce((objects, options) => {

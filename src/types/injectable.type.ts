@@ -3,7 +3,7 @@ import { AbstractContext } from './context.type';
 
 export type InjectableToken<T = any> =
   | object
-  | Function
+  | NewableFunction
   | CallableFunction
   | Constructable<T>;
 

@@ -1,13 +1,13 @@
-import { InjectableToken } from '../types/injectable.type';
+import { InjectToken } from '../types/inject.type';
 
 export class ScopeStore {
-  private readonly collection: Map<InjectableToken, any> = new Map();
+  private readonly collection: Map<InjectToken, any> = new Map();
 
-  public push(token: InjectableToken, value: any): void {
+  public push(token: InjectToken, value: any): void {
     this.collection.set(token, value);
   }
 
-  public request<T = any>(token: InjectableToken): T {
+  public request<T = any>(token: InjectToken): T {
     return this.collection.get(token);
   }
 }
