@@ -15,6 +15,5 @@ export {
   saveInLocator
 } from './stores/locator.store';
 export { Constructable } from './types/constructable.type';
-export { InjectToken } from './types/inject.type';
-export { InjectableToken } from './types/injectable.type';
+export { InjectableToken, InjectToken } from './types/injectable.type';
 export { LocatorOptions } from './types/locator.type';

@@ -1,9 +1,10 @@
 import {
+  InjectableOptions,
+  InjectableToken,
   InjectionOptions,
   InjectOptions,
   InjectToken
-} from '../types/inject.type';
-import { InjectableOptions, InjectableToken } from '../types/injectable.type';
+} from '../types/injectable.type';
 import { InvertlyContainer } from './container.factory';
 
 const INVERTLY_CONTAINER = new InvertlyContainer();

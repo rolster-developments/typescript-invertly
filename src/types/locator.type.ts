@@ -1,5 +1,4 @@
-import { InjectToken } from './inject.type';
-import { InjectableToken } from './injectable.type';
+import { InjectableToken, InjectToken } from './injectable.type';
 
 export type LocatorOptions<T = any> = {
   token: InjectToken;

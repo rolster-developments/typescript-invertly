@@ -1,6 +1,6 @@
 {
   "name": "@rolster/invertly",
-  "version": "4.2.3",
+  "version": "4.3.0",
   "type": "module",
   "description": "Invertly is a package that allows you to implement class mapping to identify and inject their dependencies.",
   "license": "MIT",

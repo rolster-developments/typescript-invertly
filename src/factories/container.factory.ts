@@ -6,11 +6,12 @@ import { ScopeStore } from '../stores/scope.store';
 import { Constructable } from '../types/constructable.type';
 import { AbstractContext } from '../types/context.type';
 import {
+  InjectableOptions,
+  InjectableToken,
   InjectionOptions,
   InjectOptions,
   InjectToken
-} from '../types/inject.type';
-import { InjectableOptions, InjectableToken } from '../types/injectable.type';
+} from '../types/injectable.type';
 
 import 'reflect-metadata';
 

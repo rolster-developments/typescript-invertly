@@ -1,5 +1,5 @@
 import { registerInject } from '../factories/invertly.factory';
-import { InjectToken } from '../types/inject.type';
+import { InjectToken } from '../types/injectable.type';
 
 interface InjectOptions {
   scopeable: boolean;

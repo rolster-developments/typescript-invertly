@@ -1,4 +1,4 @@
-import { InjectToken } from '../types/inject.type';
+import { InjectToken } from '../types/injectable.type';
 
 export class ScopeStore {
   private readonly collection: Map<InjectToken, any> = new Map();

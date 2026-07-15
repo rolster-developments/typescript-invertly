@@ -1,6 +1,6 @@
 import { SecureMap } from '@rolster/commons';
 
-import { InjectOptions, InjectToken } from '../types/inject.type';
+import { InjectOptions, InjectToken } from '../types/injectable.type';
 
 export class InjectStore {
   private collection: SecureMap<InjectOptions[], InjectToken>;
