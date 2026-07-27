@@ -66,19 +66,19 @@ service.create('Daniel'); // "User created: Daniel"
 
 `@Injectable(options?)` accepts:
 
-| Option        | Default | Meaning                                                  |
-| ------------- | ------- | -------------------------------------------------------- |
-| `singleton`   | `false` | A single instance shared across the whole container.     |
-| `scopeable`   | `false` | A single instance shared within one resolution tree.     |
+| Option      | Default | Meaning                                              |
+| ----------- | ------- | ---------------------------------------------------- |
+| `singleton` | `false` | A single instance shared across the whole container. |
+| `scopeable` | `false` | A single instance shared within one resolution tree. |
 
 When neither is set, a brand-new instance is created on every resolution.
 
 ## Resolving instances
 
-| Function                              | Use                                                       |
-| ------------------------------------- | --------------------------------------------------------- |
-| `invertly(token, container?)`         | Resolve an injectable by token.                           |
-| `createFromInvertly({ token, context? }, container?)` | Resolve, optionally passing a `Context`.  |
+| Function                                              | Use                                      |
+| ----------------------------------------------------- | ---------------------------------------- |
+| `invertly(token, container?)`                         | Resolve an injectable by token.          |
+| `createFromInvertly({ token, context? }, container?)` | Resolve, optionally passing a `Context`. |
 
 ```typescript
 const service = invertly(UserService);
@@ -86,7 +86,7 @@ const service = invertly(UserService);
 
 ## Injection lifetimes per parameter
 
-When you need to control the lifetime of a *specific* dependency (or inject by a
+When you need to control the lifetime of a _specific_ dependency (or inject by a
 token that isn't its concrete type), use the parameter decorators:
 
 ```typescript
@@ -102,11 +102,11 @@ class OrderController {
 }
 ```
 
-| Decorator            | Lifetime                                              |
-| -------------------- | ----------------------------------------------------- |
-| `@Singleton(token)`  | One instance for the entire container.                |
-| `@Scope(token)`      | One instance per resolution tree (request scope).     |
-| `@Factory(token)`    | A fresh instance for each injection.                  |
+| Decorator           | Lifetime                                          |
+| ------------------- | ------------------------------------------------- |
+| `@Singleton(token)` | One instance for the entire container.            |
+| `@Scope(token)`     | One instance per resolution tree (request scope). |
+| `@Factory(token)`   | A fresh instance for each injection.              |
 
 ## Binding abstractions to implementations
 

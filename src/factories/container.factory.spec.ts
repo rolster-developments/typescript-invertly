@@ -175,9 +175,7 @@ describe('createFromInvertly', () => {
 
     const container = new InvertlyContainer();
 
-    expect(createFromInvertly({ token: 'APP_CONFIG' }, container)).toBe(
-      config
-    );
+    expect(createFromInvertly({ token: 'APP_CONFIG' }, container)).toBe(config);
   });
 
   it('resolves falsy values registered with useValue', () => {

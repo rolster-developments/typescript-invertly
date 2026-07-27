@@ -77,14 +77,8 @@ describe('registerDependency', () => {
 
     registerDependency(SingletonService, { container, singleton: true });
 
-    const first = createFromInvertly(
-      { token: SingletonService },
-      container
-    );
-    const second = createFromInvertly(
-      { token: SingletonService },
-      container
-    );
+    const first = createFromInvertly({ token: SingletonService }, container);
+    const second = createFromInvertly({ token: SingletonService }, container);
 
     expect(second).toBe(first);
   });
