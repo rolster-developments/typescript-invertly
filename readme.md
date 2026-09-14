@@ -110,9 +110,10 @@ class OrderController {
 
 ## Binding abstractions to implementations
 
-The **locator** maps an abstract token (an abstract class, string or symbol) to
-a concrete `useClass`. This lets you depend on an abstraction and swap the
-implementation in one place:
+The **locator** maps a token (an abstract class, string or symbol — any
+`InjectToken`) either to a concrete `useClass` to instantiate, or to a fixed
+`useValue` to hand back as is. This lets you depend on an abstraction and swap
+the implementation in one place:
 
 ```typescript
 import { Injectable, saveInLocator, invertly } from '@rolster/invertly';
@@ -142,15 +143,53 @@ class UserService {
 invertly(UserService);
 ```
 
-Helpers: `saveInLocator(options[])` registers several bindings at once,
-`pushInLocator(token, useClass)` adds a single one, and `findInLocator(token)`
-looks one up. A `LocatorOptions` is `{ token, useClass, scopeable?, singleton? }`.
+A `useValue` binding resolves to the given value without instantiating
+anything. Inject it into a constructor through one of the parameter decorators
+(the reflected type of a primitive is not enough to look it up):
+
+```typescript
+import {
+  Factory,
+  Injectable,
+  invertly,
+  saveInLocator
+} from '@rolster/invertly';
+
+const API_URL = Symbol('API_URL');
+
+saveInLocator([{ token: API_URL, useValue: 'https://api.rolster.com' }]);
+
+@Injectable()
+class ApiClient {
+  constructor(@Factory(API_URL) readonly baseUrl: string) {}
+}
+
+invertly(API_URL); // 'https://api.rolster.com'
+invertly(ApiClient).baseUrl; // 'https://api.rolster.com'
+```
+
+A `LocatorOptions` is either a `LocatorClassOptions`
+(`{ token, useClass, scopeable?, singleton? }`) or a `LocatorValueOptions`
+(`{ token, useValue }`). Helpers: `saveInLocator(options[])` registers several
+bindings at once, `pushInLocator(reference, token?)` adds a single one and
+`findInLocator(token)` looks one up. `pushInLocator` accepts either a
+`LocatorOptions` object, or a string/symbol `reference` plus the class to
+instantiate for it:
+
+```typescript
+import { pushInLocator } from '@rolster/invertly';
+
+pushInLocator({ token: UserRepository, useClass: SqlUserRepository });
+pushInLocator('UserRepository', SqlUserRepository);
+```
+
+The locator is global: its bindings are visible from every container.
 
 ## Per-request context
 
 `Context` is a key/value bag you can hand to the resolver and have injected into
 any constructor. It's the basis for per-request state in server frameworks
-(e.g. `@rolster/coopplins-server`, `@rolster/messenger-service`).
+(e.g. `@rolster/coopplins-server`, `@rolster/signals`).
 
 ```typescript
 import { Injectable, Context, createFromInvertly } from '@rolster/invertly';
@@ -194,6 +233,11 @@ const service = container.createInjectable({ token: UserService });
 // or: invertly(UserService, container);
 ```
 
+The decorators (`@Injectable`, `@Singleton`, `@Scope`, `@Factory`) always
+register into the global container, so an isolated container only knows the
+classes you register on it manually (or via `registerDependency` with the
+`container` option).
+
 ## Programmatic registration
 
 When you can't (or don't want to) use decorators, register everything by hand:
@@ -209,7 +253,23 @@ registerDependency(UserService, {
 
 Lower-level primitives `registerInjectable(options, container?)` and
 `registerInject(options, container?)` are also exported (they back both the
-decorators and `registerDependency`).
+decorators and `registerDependency`). Their option shapes are not exported as
+types: `registerInjectable` takes `{ token, singleton, scopeable }` (the class
+and its lifetime flags) and `registerInject` takes
+`{ parent, index, token, singleton, scopeable }` (the class being built, the
+constructor parameter position, and the token to inject there with its
+lifetime flags).
+
+## Types
+
+| Type                     | Description                                                                     |
+| ------------------------ | ------------------------------------------------------------------------------- |
+| `Constructable<T>`       | `new (...args: any[]) => T` — a concrete class.                                 |
+| `InjectableToken<T>`     | A class (or object/function) that can be registered and instantiated.           |
+| `InjectToken<T>`         | `InjectableToken<T> \| string \| symbol` — anything you can resolve or bind.    |
+| `LocatorClassOptions<T>` | `{ token: InjectToken; useClass: InjectableToken<T>; scopeable?; singleton? }`. |
+| `LocatorValueOptions<T>` | `{ token: InjectToken; useValue: T }`.                                          |
+| `LocatorOptions<T>`      | `LocatorClassOptions<T> \| LocatorValueOptions<T>`.                             |
 
 ## Contributing
 
