@@ -1,6 +1,6 @@
 {
   "name": "@rolster/invertly",
-  "version": "4.3.1",
+  "version": "4.3.2",
   "type": "module",
   "description": "Invertly is a package that allows you to implement class mapping to identify and inject their dependencies.",
   "license": "MIT",
@@ -29,24 +29,24 @@
   ],
   "scripts": {
     "prettier": "prettier --write .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "clean": "rimraf ./dist",
-    "build": "npm run clean && tsc -p tsconfig.app.json && rollup -c rollup.config.mjs",
+    "build": "npm run clean && tsc -p tsconfig.app.json && rolster-rollup",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "prepublishOnly": "npm run build",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@rolster/commons": "^4.1.2",
+    "@rolster/commons": "^4.2.4",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@rolster/rollup": "^2.1.1",
+    "@rolster/rollup": "^2.2.0",
     "@rolster/types": "^1.1.1",
-    "@vitest/coverage-v8": "^4.1.8",
-    "@vitest/ui": "^4.1.8",
+    "@vitest/coverage-v8": "^5.0.0",
+    "@vitest/ui": "^5.0.0",
     "eslint": "^10.7.0",
     "eslint-plugin-perfectionist": "^5.10.0",
     "eslint-plugin-simple-import-sort": "^13.0.0",
@@ -56,7 +56,7 @@
     "tslib": "^2.4.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.64.0",
-    "vitest": "^4.1.8"
+    "vitest": "^5.0.0"
   },
   "repository": {
     "type": "git",
