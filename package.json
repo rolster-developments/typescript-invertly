@@ -46,7 +46,6 @@
     "@rolster/rollup": "^2.2.0",
     "@rolster/types": "^1.1.1",
     "@vitest/coverage-v8": "^5.0.0",
-    "@vitest/ui": "^5.0.5",
     "eslint": "^10.7.0",
     "eslint-plugin-perfectionist": "^5.10.0",
     "eslint-plugin-simple-import-sort": "^13.0.0",
