@@ -1,3 +1,4 @@
+import { LocatorClassOptions } from '../types/locator.type';
 import { findInLocator, pushInLocator, saveInLocator } from './locator.store';
 
 describe('LocatorStore', () => {
@@ -40,8 +41,11 @@ describe('LocatorStore', () => {
       { token: tokenB, useClass: ServiceB, singleton: true }
     ]);
 
-    expect(findInLocator(tokenA)?.useClass).toBe(ServiceA);
-    expect(findInLocator(tokenB)?.singleton).toBe(true);
+    const optionsA = findInLocator(tokenA) as Undefined<LocatorClassOptions>;
+    const optionsB = findInLocator(tokenB) as Undefined<LocatorClassOptions>;
+
+    expect(optionsA?.useClass).toBe(ServiceA);
+    expect(optionsB?.singleton).toBe(true);
   });
 
   it('returns undefined for tokens never registered', () => {
